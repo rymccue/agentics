@@ -77,6 +77,9 @@ pub(crate) enum Command {
         /// Resolve and write the lockfile before applying sync.
         #[arg(long)]
         write_lock: bool,
+        /// Adopt existing matching targets before syncing.
+        #[arg(long)]
+        adopt_existing: bool,
         /// Fail instead of prompting for confirmation.
         #[arg(long)]
         non_interactive: bool,
@@ -92,6 +95,9 @@ pub(crate) enum Command {
         /// Assume yes for prompts that are safe to auto-confirm.
         #[arg(long)]
         yes: bool,
+        /// Adopt existing matching targets before syncing.
+        #[arg(long)]
+        adopt_existing: bool,
         /// Fail instead of prompting for confirmation.
         #[arg(long)]
         non_interactive: bool,

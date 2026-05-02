@@ -127,8 +127,15 @@ pub(crate) fn check_write_preconditions(
     let metadata_path = metadata_path_for(&target, action.kind);
 
     if target.exists() && !metadata_path.is_file() {
+        let current_integrity = hash_path(&target)?;
+        if current_integrity == action.integrity {
+            bail!(
+                "refusing to overwrite unmanaged target `{}`; content matches the declared source, so run `agentics adopt` before syncing",
+                action.target.display()
+            );
+        }
         bail!(
-            "refusing to overwrite unmanaged target `{}`",
+            "refusing to overwrite unmanaged target `{}`; content differs from the declared source",
             action.target.display()
         );
     }
@@ -143,6 +150,44 @@ pub(crate) fn check_write_preconditions(
         }
     }
     Ok(())
+}
+
+pub(crate) fn adopt_existing_matching_targets(root: &Path, actions: &[PlanAction]) -> Result<()> {
+    let mut adopted = false;
+    for action in actions {
+        let target = root.join(&action.target);
+        if !target.exists() {
+            continue;
+        }
+        let metadata_path = metadata_path_for(&target, action.kind);
+        if metadata_path.is_file() {
+            continue;
+        }
+        let current_integrity = hash_path(&target)?;
+        if current_integrity != action.integrity {
+            bail!(
+                "cannot adopt existing target `{}` because content differs from the declared source",
+                action.target.display()
+            );
+        }
+        write_owner_metadata(&metadata_path, action)?;
+        println!("adopted {}", action.target.display());
+        adopted = true;
+    }
+    if adopted && all_plan_targets_installed(root, actions)? {
+        write_installed_summary(root, actions)?;
+    }
+    Ok(())
+}
+
+fn all_plan_targets_installed(root: &Path, actions: &[PlanAction]) -> Result<bool> {
+    for action in actions {
+        let target = root.join(&action.target);
+        if target_state(&target, action)? != "installed" {
+            return Ok(false);
+        }
+    }
+    Ok(true)
 }
 
 pub(crate) fn ensure_safe_destination(root: &Path, target: &Path) -> Result<()> {

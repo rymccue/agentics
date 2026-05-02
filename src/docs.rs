@@ -46,7 +46,9 @@ const DOCS_COMMANDS: &str = r#"# agentics commands
 - agentics status: show installed, missing, unmanaged, drifted, or outdated targets.
 - agentics sync --dry-run: preview current sync state and warnings.
 - agentics sync --yes: install or update managed targets.
+- agentics sync --adopt-existing: mark matching existing targets as managed before syncing.
 - agentics refresh --yes: update lockfile, then sync.
+- agentics refresh --adopt-existing --yes: reinstall from an existing checkout after metadata removal.
 - agentics list: show declared resources and target paths.
 - agentics prune --dry-run: preview managed targets no longer declared.
 - agentics prune: remove stale managed targets.
@@ -91,6 +93,8 @@ const DOCS_MIGRATION: &str = r#"# migrating an existing repo
 
 5. Adopt matching files:
    agentics adopt
+   Or, when restoring a repo where only local agentics metadata was removed:
+   agentics refresh --adopt-existing --yes
 
 6. Verify:
    agentics doctor --strict

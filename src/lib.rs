@@ -34,9 +34,10 @@ use fsutil::{remove_path, write_file_atomically};
 use git::{GitStageCache, git_stdout_in, stage_git_checkout, stage_git_source};
 use hash::hash_path;
 use install::{
-    InstallOutcome, InstalledSummary, InstalledSummaryEntry, check_write_preconditions,
-    ensure_safe_destination, install_action, installed_summary_lockfile_matches, metadata_path_for,
-    target_state, write_installed_summary, write_owner_metadata,
+    InstallOutcome, InstalledSummary, InstalledSummaryEntry, adopt_existing_matching_targets,
+    check_write_preconditions, ensure_safe_destination, install_action,
+    installed_summary_lockfile_matches, metadata_path_for, target_state, write_installed_summary,
+    write_owner_metadata,
 };
 use lockfile::{
     build_lockfile, build_selective_lockfile, load_lockfile, lockfile_hash,
@@ -85,6 +86,7 @@ pub fn run() -> Result<()> {
             force,
             yes,
             write_lock,
+            adopt_existing,
             non_interactive,
         } => sync(
             cli.manifest,
@@ -96,6 +98,7 @@ pub fn run() -> Result<()> {
                 force,
                 yes,
                 write_lock,
+                adopt_existing,
                 non_interactive,
             },
         ),
@@ -103,6 +106,7 @@ pub fn run() -> Result<()> {
             harness,
             force,
             yes,
+            adopt_existing,
             non_interactive,
         } => refresh(
             cli.manifest,
@@ -110,6 +114,7 @@ pub fn run() -> Result<()> {
                 harness,
                 force,
                 yes,
+                adopt_existing,
                 non_interactive,
             },
         ),

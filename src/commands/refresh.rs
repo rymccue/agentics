@@ -12,6 +12,7 @@ pub(crate) struct RefreshOptions {
     pub(crate) harness: Option<HarnessName>,
     pub(crate) force: bool,
     pub(crate) yes: bool,
+    pub(crate) adopt_existing: bool,
     pub(crate) non_interactive: bool,
 }
 
@@ -29,6 +30,7 @@ pub(crate) fn refresh(manifest_path: PathBuf, options: RefreshOptions) -> Result
             force: options.force,
             yes: options.yes,
             write_lock: false,
+            adopt_existing: options.adopt_existing,
             non_interactive: options.non_interactive,
         },
     )

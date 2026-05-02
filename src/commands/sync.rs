@@ -13,6 +13,7 @@ pub(crate) struct SyncOptions {
     pub(crate) force: bool,
     pub(crate) yes: bool,
     pub(crate) write_lock: bool,
+    pub(crate) adopt_existing: bool,
     pub(crate) non_interactive: bool,
 }
 
@@ -38,6 +39,9 @@ pub(crate) fn sync(manifest_path: PathBuf, options: SyncOptions) -> Result<()> {
     }
     let plan = build_sync_plan(&manifest, manifest_dir, options.harness)?;
     if options.dry_run {
+        if options.adopt_existing {
+            bail!("--adopt-existing cannot be used with --dry-run");
+        }
         for action in &plan {
             check_write_preconditions(manifest_dir, action, options.force)?;
         }
@@ -61,6 +65,10 @@ pub(crate) fn sync(manifest_path: PathBuf, options: SyncOptions) -> Result<()> {
             }
         }
         return Ok(());
+    }
+
+    if options.adopt_existing {
+        adopt_existing_matching_targets(manifest_dir, &plan)?;
     }
 
     if options.non_interactive && !options.yes {
