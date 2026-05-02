@@ -1,0 +1,10 @@
+apiVersion: agentics.dev/v1alpha1
+kind: AgenticsManifest
+harnesses:
+  claude:
+    enabled: true
+  codex:
+    enabled: true
+  pi:
+    enabled: true
+install: []

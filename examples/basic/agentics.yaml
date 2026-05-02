@@ -1,0 +1,29 @@
+apiVersion: agentics.dev/v1alpha1
+kind: AgenticsManifest
+policy:
+  requirePinnedGit: true
+harnesses:
+  claude:
+    enabled: true
+  codex:
+    enabled: true
+  pi:
+    enabled: true
+    skillRoot: agents
+install:
+  - type: skill
+    name: review
+    source: ./skills/review
+    harnesses: [claude, codex, pi]
+  - type: context
+    name: agents
+    source: ./context/AGENTS.md
+    harnesses: [claude, codex, pi]
+  - type: prompt
+    name: summarize
+    source: ./prompts/summarize.md
+    harnesses: [claude, pi]
+  - type: agent
+    name: reviewer
+    source: ./agents/reviewer.md
+    harnesses: [claude]

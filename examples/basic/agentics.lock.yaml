@@ -1,0 +1,19 @@
+apiVersion: agentics.dev/v1alpha1
+kind: AgenticsLock
+resources:
+- type: skill
+  name: review
+  source: './skills/review'
+  integrity: sha256:fceae3402cb68970174d37dd5166a8d8ee98acc0d62b740727ffc6ebfafba126
+- type: context
+  name: agents
+  source: './context/AGENTS.md'
+  integrity: sha256:c91eabede16a868ce4dd939ae7a9fb1ff13a0a2f9a577f4abded1a0acf2edf35
+- type: prompt
+  name: summarize
+  source: './prompts/summarize.md'
+  integrity: sha256:ceae1ea0479badc7ecd6bd86d48efde4f0945292509c5b517365f8e21febbc87
+- type: agent
+  name: reviewer
+  source: './agents/reviewer.md'
+  integrity: sha256:c3af23c5ac1498c46999bd99f6efd501a2641836c427335d7a8cfa59bfffdf2b
